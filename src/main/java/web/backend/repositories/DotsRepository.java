@@ -1,4 +1,8 @@
 package web.backend.repositories;
 
-public class DotsRepository {
+import org.springframework.data.repository.PagingAndSortingRepository;
+import web.backend.util.DotEntry;
+
+public interface DotsRepository extends PagingAndSortingRepository<DotEntry, Long> {
+
 }

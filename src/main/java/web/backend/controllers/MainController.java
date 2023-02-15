@@ -1,21 +1,20 @@
 package web.backend.controllers;
 
-import org.apache.log4j.Logger;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class MainController {
 
     //TODO: ничего не менял в этом контроллере
-    Logger logger = Logger.getLogger(MainController.class);
 
-    final RabbitTemplate template;
+    private final RabbitTemplate template;
 
-    public MainController(RabbitTemplate template) {
+    public MainController(@Qualifier("routeRabbitTemplate") RabbitTemplate template) {
         this.template = template;
     }
 
@@ -28,7 +27,7 @@ public class MainController {
     @RequestMapping("/emit/error")
     @ResponseBody
     String error() {
-        logger.info("Emit as error");
+        System.out.println("Emit as error");
         template.convertAndSend("error", "Error");
         return "Emit as error";
     }
@@ -36,7 +35,7 @@ public class MainController {
     @RequestMapping("/emit/info")
     @ResponseBody
     String info() {
-        logger.info("Emit as info");
+        System.out.println("Emit as info");
         template.convertAndSend("info", "Info");
         return "Emit as info";
     }
@@ -44,8 +43,13 @@ public class MainController {
     @RequestMapping("/emit/warning")
     @ResponseBody
     String warning() {
-        logger.info("Emit as warning");
+        System.out.println("Emit as warning");
         template.convertAndSend("warning", "Warning");
         return "Emit as warning";
+    }
+
+    @RabbitListener(queues = "queue1")
+    public void processQueue1(String message) {
+        System.out.println("Received from queue 1: " + message);
     }
 }

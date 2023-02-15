@@ -26,7 +26,12 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate() {
+    public RabbitTemplate backRabbitTemplate() {
+        return new RabbitTemplate(connectionFactory());
+    }
+
+    @Bean
+    public RabbitTemplate routeRabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
         rabbitTemplate.setExchange("exchange");
         return rabbitTemplate;
@@ -43,27 +48,37 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public DirectExchange directExchange(){
+    public Queue backQuery() {
+        return new Queue("back-query");
+    }
+
+    @Bean
+    public Queue myQueue1() {
+        return new Queue("queue1");
+    }
+
+    @Bean
+    public DirectExchange directExchange() {
         return new DirectExchange("exchange");
     }
 
     @Bean
-    public Binding errorBinding1(){
+    public Binding errorBinding1() {
         return BindingBuilder.bind(addingQuery()).to(directExchange()).with("error");
     }
 
     @Bean
-    public Binding errorBinding2(){
+    public Binding errorBinding2() {
         return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("error");
     }
 
     @Bean
-    public Binding infoBinding(){
+    public Binding infoBinding() {
         return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("info");
     }
 
     @Bean
-    public Binding warningBinding(){
+    public Binding warningBinding() {
         return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("warning");
     }
 
