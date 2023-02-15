@@ -2,8 +2,10 @@ package web.backend.util;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class DotDTO {
+public class DotDTO implements Serializable {
     private DotEntity dot;
     private String type;
 

@@ -1,5 +1,7 @@
 package web.backend.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,22 +17,28 @@ public class AddingService {
     //TODO: реализовать
 
     private final RabbitTemplate template;
-    private final DotsRepository repository;
+    private DotsRepository repository;
+    private final ObjectMapper mapper;
 
     public AddingService(
             @Qualifier("backRabbitTemplate") RabbitTemplate template,
-            DotsRepository dotsRepository) {
+            DotsRepository dotsRepository,
+            ObjectMapper mapper) {
         this.template = template;
         this.repository = dotsRepository;
+        this.mapper = mapper;
     }
 
-    @Transactional
-    public void handlingNewDot(DotEntity dot) {
+    public void handlingNewDot(String data) throws JsonProcessingException {
+        DotEntity dot = mapper.readValue(data, DotEntity.class);
+        System.out.println("accepted on AddingService: " + dot.toString());
         dot.setInArea(checkArea(dot));
         dot.setTime((int) System.currentTimeMillis() - dot.getDate());
-        DotDTO dto = new DotDTO(dot, "dot");
-        send(dto);
-
+//        DotDTO dto = new DotDTO(dot, "dot");
+//        send(dto);
+        System.out.println(mapper.writeValueAsString(dot));
+        repository.addDot(dot.getX(), dot.getY(), dot.getR(), dot.getDate(), dot.getTime(), dot.getOwner(), dot.getCreator(), dot.getInArea());
+        System.out.println(repository.getDots());
     }
 
     private Boolean checkArea(DotEntity dot) {
@@ -39,15 +47,16 @@ public class AddingService {
     }
 
     @RabbitListener(queues = "adding-query")
-    private void receive(DotEntity dot) {
-        System.out.println("accepted on AddingService: " + dot.toString());
-        handlingNewDot(dot);
+    public void receive(String data) {
+        try {
+            handlingNewDot(data);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void send(DotDTO dto) {
         System.out.println("send back: " + dto.toString());
         template.convertAndSend("back-queue", dto);
     }
-
-
 }

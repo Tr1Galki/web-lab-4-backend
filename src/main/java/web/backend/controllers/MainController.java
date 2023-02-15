@@ -1,5 +1,7 @@
 package web.backend.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,9 +17,12 @@ public class MainController {
     //TODO: ничего не менял в этом контроллере
 
     private final RabbitTemplate template;
+    private final ObjectMapper mapper;
 
-    public MainController(@Qualifier("routeRabbitTemplate") RabbitTemplate template) {
+    public MainController(@Qualifier("routeRabbitTemplate") RabbitTemplate template,
+                          ObjectMapper mapper) {
         this.template = template;
+        this.mapper = mapper;
     }
 
     @RequestMapping("/")
@@ -41,10 +46,13 @@ public class MainController {
                         @RequestParam("r") Double r,
                         @RequestParam("date") Integer date,
                         @RequestParam("creator") String creator,
-                        @RequestParam("owner") String owner) {
+                        @RequestParam("owner") String owner) throws JsonProcessingException {
         System.out.println("get dot");
         DotEntity dot = new DotEntity(x, y, r, date, creator, owner);
-        template.convertAndSend("add", dot);
+        String message = mapper.writeValueAsString(dot);
+
+        template.convertAndSend("add", message);
+
         return "Added";
     }
 
