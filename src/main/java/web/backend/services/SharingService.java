@@ -25,13 +25,13 @@ public class SharingService {
     }
 
     @RabbitListener(queues = "sharing-query")
-    public void receive(String message) {
+    private void receive(String message) {
         System.out.println("accepted on worker 2: " + message);
         send(message);
     }
 
     private void send(String message) {
         System.out.println("send back: " + "Message to queue");
-        template.convertAndSend("queue1","Message to queue");
+        template.convertAndSend("back-queue","Message to queue");
     }
 }

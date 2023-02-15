@@ -1,8 +1,6 @@
 package web.backend.util.area;
 
 
-import web.backend.util.DotEntry;
-
 public class Circle extends Shape{
 
     public Circle(Integer quarter) {

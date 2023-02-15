@@ -1,7 +1,6 @@
 package web.backend.util.area;
 
 import lombok.Data;
-import web.backend.util.DotEntry;
 
 @Data
 public abstract class Shape {

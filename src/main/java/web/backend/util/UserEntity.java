@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 @Data
-public class UserEntry {
+public class UserEntity {
     @Id
     private String id;
     private String phoneNumber;

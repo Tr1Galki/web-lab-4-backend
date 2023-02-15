@@ -4,8 +4,10 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import web.backend.util.DotEntity;
 
 @RestController
 public class MainController {
@@ -20,36 +22,42 @@ public class MainController {
 
     @RequestMapping("/")
     @ResponseBody
-    String home() {
+    private String home() {
         return "Empty mapping";
     }
 
-    @RequestMapping("/emit/error")
+    @RequestMapping("/add-with-share")
     @ResponseBody
-    String error() {
-        System.out.println("Emit as error");
-        template.convertAndSend("error", "Error");
-        return "Emit as error";
+    private String error() {
+        System.out.println("add-with-share");
+        template.convertAndSend("add-with-share", "Add-with-share");
+        return "Completed";
     }
 
-    @RequestMapping("/emit/info")
+    @RequestMapping("/addDot")
     @ResponseBody
-    String info() {
-        System.out.println("Emit as info");
-        template.convertAndSend("info", "Info");
-        return "Emit as info";
+    private String info(@RequestParam("x") Double x,
+                        @RequestParam("y") Double y,
+                        @RequestParam("r") Double r,
+                        @RequestParam("date") Integer date,
+                        @RequestParam("creator") String creator,
+                        @RequestParam("owner") String owner) {
+        System.out.println("get dot");
+        DotEntity dot = new DotEntity(x, y, r, date, creator, owner);
+        template.convertAndSend("add", dot);
+        return "Added";
     }
 
-    @RequestMapping("/emit/warning")
+    @RequestMapping("/share")
     @ResponseBody
-    String warning() {
-        System.out.println("Emit as warning");
-        template.convertAndSend("warning", "Warning");
-        return "Emit as warning";
+    private String warning() {
+        System.out.println("share");
+        template.convertAndSend("share", "Share");
+        return "Share";
     }
 
-    @RabbitListener(queues = "queue1")
-    public void processQueue1(String message) {
-        System.out.println("Received from queue 1: " + message);
+    @RabbitListener(queues = "back-queue")
+    private void processQueue1(String message) {
+        System.out.println("Received from back-queue: " + message);
     }
 }

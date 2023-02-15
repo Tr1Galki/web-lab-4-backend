@@ -1,7 +1,5 @@
 package web.backend.util.area;
 
-import web.backend.util.DotEntry;
-
 public class Triangle extends Shape {
     public Triangle(Integer quarter) {
         super(quarter);

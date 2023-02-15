@@ -54,7 +54,7 @@ public class RabbitConfiguration {
 
     @Bean
     public Queue myQueue1() {
-        return new Queue("queue1");
+        return new Queue("back-queue");
     }
 
     @Bean
@@ -64,22 +64,22 @@ public class RabbitConfiguration {
 
     @Bean
     public Binding errorBinding1() {
-        return BindingBuilder.bind(addingQuery()).to(directExchange()).with("error");
+        return BindingBuilder.bind(addingQuery()).to(directExchange()).with("add-with-share");
     }
 
     @Bean
     public Binding errorBinding2() {
-        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("error");
+        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("add-with-share");
     }
 
     @Bean
     public Binding infoBinding() {
-        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("info");
+        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("share");
     }
 
     @Bean
     public Binding warningBinding() {
-        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("warning");
+        return BindingBuilder.bind(addingQuery()).to(directExchange()).with("add");
     }
 
 }

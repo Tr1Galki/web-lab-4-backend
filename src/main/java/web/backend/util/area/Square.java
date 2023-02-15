@@ -1,7 +1,5 @@
 package web.backend.util.area;
 
-import web.backend.util.DotEntry;
-
 public class Square extends Shape {
     public Square(Integer quarter) {
         super(quarter);
