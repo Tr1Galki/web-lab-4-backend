@@ -48,6 +48,11 @@ public class RabbitConfiguration {
     }
 
     @Bean
+    public Queue getDotsQuery() {
+        return new Queue("getting-dots-query");
+    }
+
+    @Bean
     public Queue backQuery() {
         return new Queue("back-query");
     }
@@ -73,13 +78,17 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Binding infoBinding() {
-        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("share");
+    public Binding shareBinding() {
+        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("share-dots");
     }
 
     @Bean
-    public Binding warningBinding() {
-        return BindingBuilder.bind(addingQuery()).to(directExchange()).with("add");
+    public Binding addBinding() {
+        return BindingBuilder.bind(addingQuery()).to(directExchange()).with("add-dots");
     }
 
+    @Bean
+    public Binding getDotsBinding() {
+        return BindingBuilder.bind(getDotsQuery()).to(directExchange()).with("get-dots");
+    }
 }

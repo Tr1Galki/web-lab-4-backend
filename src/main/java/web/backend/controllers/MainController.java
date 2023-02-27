@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import web.backend.util.DTO.AddDotDTO;
+import web.backend.util.DTO.GetDotsDTO;
 import web.backend.util.DTO.MessageDTO;
 
 @RestController
@@ -48,10 +49,22 @@ public class MainController {
         return message;
     }
 
-    @MessageMapping("/add")
-    public void receiveDotsMessage(@Payload AddDotDTO addDotDTO) {
+    @MessageMapping("/add-dot")
+    public void receiveAddDotMessage(@Payload AddDotDTO addDotDTO) {
         //TODO: в addDotDTO нет имени владельца и прочего...
-        rabbitTemplate.convertAndSend("add", addDotDTO);
+        rabbitTemplate.convertAndSend("add-dots", addDotDTO.toJsonString());
+    }
+
+    @MessageMapping("/get-dots")
+    public void receiveGetAllDotsMessage(@Payload GetDotsDTO getDotsDTO) {
+        //TODO: в addDotDTO нет имени владельца и прочего...
+        rabbitTemplate.convertAndSend("get-dots", getDotsDTO.toJsonString());
+    }
+
+    @MessageMapping("/share-dots")
+    public void receiveShareDotsMessage(@Payload GetDotsDTO getDotsDTO) {
+        //TODO: в addDotDTO нет имени владельца и прочего...
+        rabbitTemplate.convertAndSend("share-dots", getDotsDTO.toJsonString());
     }
 
 //    @RequestMapping("/add-with-share")
@@ -62,22 +75,6 @@ public class MainController {
 //        return "Completed";
 //    }
 //
-//    @RequestMapping("/addDot")
-//    @ResponseBody
-//    private String info(@RequestParam("x") Double x,
-//                        @RequestParam("y") Double y,
-//                        @RequestParam("r") Double r,
-//                        @RequestParam("date") Integer date,
-//                        @RequestParam("creator") String creator,
-//                        @RequestParam("owner") String owner) throws JsonProcessingException {
-//        System.out.println("get dot");
-//        DotEntity dot = new DotEntity(x, y, r, date, creator, owner);
-//        String message = mapper.writeValueAsString(dot);
-//
-//        rabbitTemplate.convertAndSend("add", message);
-//
-//        return "Added";
-//    }
 //
 //    @RequestMapping("/share")
 //    @ResponseBody

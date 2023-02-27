@@ -11,8 +11,8 @@ public class DotEntity implements Serializable {
     private Long id;
     private Boolean inArea;
     private Double x, y, r;
-    private Integer date;
-    private Integer time;
+    private Long date;
+    private Long time;
     private String owner;
     private String creator;
 
@@ -20,7 +20,7 @@ public class DotEntity implements Serializable {
 
     }
 
-    public DotEntity(Double x, Double y, Double r, Integer date, String owner, String creator) {
+    public DotEntity(Double x, Double y, Double r, Long date, String owner, String creator) {
         this.x = x;
         this.y = y;
         this.r = r;

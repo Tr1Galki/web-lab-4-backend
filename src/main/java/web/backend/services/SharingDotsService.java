@@ -4,24 +4,21 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
 import web.backend.repositories.DotsRepository;
 import web.backend.repositories.UsersRepository;
 import web.backend.util.DotEntity;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 @Service
-public class SharingService {
+public class SharingDotsService {
     //TODO: реализовать
 
     private final DotsRepository dotsRepository;
     private final UsersRepository usersRepository;
     private final RabbitTemplate template;
 
-    public SharingService(
+    public SharingDotsService(
             DotsRepository dotsRepository,
             UsersRepository usersRepository,
             @Qualifier("backRabbitTemplate") RabbitTemplate template) {
