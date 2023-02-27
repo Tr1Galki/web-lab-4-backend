@@ -39,12 +39,12 @@ public class RabbitConfiguration {
 
     @Bean
     public Queue addingQuery() {
-        return new Queue("adding-query");
+        return new Queue("adding-dots-query");
     }
 
     @Bean
     public Queue sharingQuery() {
-        return new Queue("sharing-query");
+        return new Queue("sharing-dots-query");
     }
 
     @Bean

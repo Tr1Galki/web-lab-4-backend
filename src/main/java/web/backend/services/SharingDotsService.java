@@ -35,7 +35,7 @@ public class SharingDotsService {
         }
     }
 
-    @RabbitListener(queues = "sharing-query")
+    @RabbitListener(queues = "sharing-dots-query")
     private void receive(String message) {
         System.out.println("accepted on worker 2: " + message);
         send(message);

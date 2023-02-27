@@ -43,7 +43,7 @@ public class AddingDotsService {
         return areaChecker.isInArea(dot.getX(), dot.getY(), dot.getR());
     }
 
-    @RabbitListener(queues = "adding-query")
+    @RabbitListener(queues = "adding-dots-query")
     public void receive(String data) {
         handlingNewDot(new AddDotDTO(data));
     }
