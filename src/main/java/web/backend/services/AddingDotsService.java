@@ -27,15 +27,13 @@ public class AddingDotsService {
     }
 
     public void handlingNewDot(AddDotDTO data) {
-        DotEntity dot = new DotEntity(data.getX(), data.getY(), data.getR(), data.getDate(), data.getOwner(), data.getOwner());
+        DotEntity dot = new DotEntity(data.getX(), data.getY(), data.getR(), data.getDate(), data.getOwner());
         dot.setInArea(checkArea(dot));
         dot.setTime( System.currentTimeMillis() - dot.getDate());
         DotsDTO dots = new DotsDTO();
-        System.out.println(System.currentTimeMillis());
         dots.addDot(dot);
 //        send(dots);
-        repository.addDot(dot.getX(), dot.getY(), dot.getR(), dot.getDate(), dot.getTime(), dot.getOwner(), dot.getCreator(), dot.getInArea());
-        System.out.println(dot);
+        repository.addDot(dot.getX(), dot.getY(), dot.getR(), dot.getDate(), dot.getTime(), dot.getOwner(), dot.getInArea());
     }
 
     private Boolean checkArea(DotEntity dot) {
@@ -44,8 +42,8 @@ public class AddingDotsService {
     }
 
     @RabbitListener(queues = "adding-dots-query")
-    public void receive(String data) {
-        handlingNewDot(new AddDotDTO(data));
+    public void receive(String jsonMessage) {
+        handlingNewDot(new AddDotDTO(jsonMessage));
     }
 
     private void send(DotsDTO dto) {

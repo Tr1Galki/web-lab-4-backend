@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import web.backend.repositories.DotsRepository;
 import web.backend.util.DTO.GetDotsDTO;
+import web.backend.util.DTO.SendDotsDTO;
 import web.backend.util.DotEntity;
 
 import java.util.LinkedList;
@@ -24,9 +25,9 @@ public class GettingDotsService {
 
     private void handlingMessage(GetDotsDTO data) {
         String owner = data.getOwner();
-        List<DotEntity> dots = repository.getDotsByOwner(owner);
-        System.out.println(dots);
-//        send(data);
+        LinkedList<DotEntity> dots = repository.getDotsByOwner(owner);
+        SendDotsDTO dto = new SendDotsDTO(dots);
+        send(dto);
     }
 
     @RabbitListener(queues = "getting-dots-query")
@@ -34,8 +35,7 @@ public class GettingDotsService {
         handlingMessage(new GetDotsDTO().fromJsonString(data));
     }
 
-    private void send(String data) {
-        System.out.println("send back: " + data);
-        template.convertAndSend("back-queue", data);
+    private void send(SendDotsDTO data) {
+        template.convertAndSend("back-queue", data.toJsonString());
     }
 }

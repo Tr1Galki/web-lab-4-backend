@@ -14,18 +14,15 @@ public class DotEntity implements Serializable {
     private Long date;
     private Long time;
     private String owner;
-    private String creator;
-
     public DotEntity() {
 
     }
 
-    public DotEntity(Double x, Double y, Double r, Long date, String owner, String creator) {
+    public DotEntity(Double x, Double y, Double r, Long date, String owner) {
         this.x = x;
         this.y = y;
         this.r = r;
         this.date = date;
         this.owner = owner;
-        this.creator = creator;
     }
 }

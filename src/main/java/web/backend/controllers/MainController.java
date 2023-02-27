@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import web.backend.util.DTO.AddDotDTO;
 import web.backend.util.DTO.GetDotsDTO;
 import web.backend.util.DTO.MessageDTO;
+import web.backend.util.DTO.SendDotsDTO;
 
 @RestController
-public class MainController {
+public class    MainController {
 
     //TODO: ничего не менял в этом контроллере
 
@@ -61,12 +62,6 @@ public class MainController {
         rabbitTemplate.convertAndSend("get-dots", getDotsDTO.toJsonString());
     }
 
-    @MessageMapping("/share-dots")
-    public void receiveShareDotsMessage(@Payload GetDotsDTO getDotsDTO) {
-        //TODO: в addDotDTO нет имени владельца и прочего...
-        rabbitTemplate.convertAndSend("share-dots", getDotsDTO.toJsonString());
-    }
-
 //    @RequestMapping("/add-with-share")
 //    @ResponseBody
 //    private String error() {
@@ -83,6 +78,10 @@ public class MainController {
 //        rabbitTemplate.convertAndSend("share", "Share");
 //        return "Share";
 //    }
+
+    public void sendDots(SendDotsDTO dto) {
+
+    }
 
     @RabbitListener(queues = "back-queue")
     private void processQueue1(String message) {
