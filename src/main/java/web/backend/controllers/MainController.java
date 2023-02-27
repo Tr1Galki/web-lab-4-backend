@@ -21,14 +21,12 @@ public class    MainController {
 
     private final RabbitTemplate rabbitTemplate;
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final ObjectMapper mapper;
 
     public MainController(@Qualifier("routeRabbitTemplate") RabbitTemplate rabbitTemplate,
                           SimpMessagingTemplate simpMessagingTemplate,
                           ObjectMapper mapper) {
         this.rabbitTemplate = rabbitTemplate;
         this.simpMessagingTemplate = simpMessagingTemplate;
-        this.mapper = mapper;
     }
 
 //    @RequestMapping("/")
@@ -58,33 +56,15 @@ public class    MainController {
 
     @MessageMapping("/get-dots")
     public void receiveGetAllDotsMessage(@Payload GetDotsDTO getDotsDTO) {
-        //TODO: в addDotDTO нет имени владельца и прочего...
         rabbitTemplate.convertAndSend("get-dots", getDotsDTO.toJsonString());
     }
 
-//    @RequestMapping("/add-with-share")
-//    @ResponseBody
-//    private String error() {
-//        System.out.println("add-with-share");
-//        rabbitTemplate.convertAndSend("add-with-share", "Add-with-share");
-//        return "Completed";
-//    }
-//
-//
-//    @RequestMapping("/share")
-//    @ResponseBody
-//    private String warning() {
-//        System.out.println("share");
-//        rabbitTemplate.convertAndSend("share", "Share");
-//        return "Share";
-//    }
-
-    public void sendDots(SendDotsDTO dto) {
-
+    public void sendDots(@Payload SendDotsDTO dto) {
+        simpMessagingTemplate.convertAndSendToUser(dto.getReceiverName(), "/dots", dto);
     }
 
     @RabbitListener(queues = "back-queue")
-    private void processQueue1(String message) {
-        System.out.println("Received from back-queue: " + message);
+    private void processBackQueue(String message) {
+        sendDots(new SendDotsDTO(message));
     }
 }

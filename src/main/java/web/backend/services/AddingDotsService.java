@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import web.backend.repositories.DotsRepository;
 import web.backend.util.DTO.AddDotDTO;
-import web.backend.util.DTO.DotsDTO;
+import web.backend.util.DTO.SendDotsDTO;
 import web.backend.util.DotEntity;
 import web.backend.util.area.AreaChecker;
 
@@ -30,15 +30,14 @@ public class AddingDotsService {
         DotEntity dot = new DotEntity(data.getX(), data.getY(), data.getR(), data.getDate(), data.getOwner());
         dot.setInArea(checkArea(dot));
         dot.setTime( System.currentTimeMillis() - dot.getDate());
-        DotsDTO dots = new DotsDTO();
-        dots.addDot(dot);
-//        send(dots);
+        SendDotsDTO dto = new SendDotsDTO(dot);
+        send(dto);
         repository.addDot(dot.getX(), dot.getY(), dot.getR(), dot.getDate(), dot.getTime(), dot.getOwner(), dot.getInArea());
     }
 
-    private Boolean checkArea(DotEntity dot) {
+    private Integer checkArea(DotEntity dot) {
         AreaChecker areaChecker = new AreaChecker();
-        return areaChecker.isInArea(dot.getX(), dot.getY(), dot.getR());
+        return areaChecker.isInArea(dot.getX(), dot.getY(), dot.getR()) ? 1 : 0;
     }
 
     @RabbitListener(queues = "adding-dots-query")
@@ -46,8 +45,7 @@ public class AddingDotsService {
         handlingNewDot(new AddDotDTO(jsonMessage));
     }
 
-    private void send(DotsDTO dto) {
-        System.out.println("send back: " + dto.toString());
-        template.convertAndSend("back-queue", dto);
+    private void send(SendDotsDTO data) {
+        template.convertAndSend("back-queue", data.toJsonString());
     }
 }

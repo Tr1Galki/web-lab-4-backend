@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class DotEntity implements Serializable {
     @Id
     private Long id;
-    private Boolean inArea;
+    private Integer inArea;
     private Double x, y, r;
     private Long date;
     private Long time;

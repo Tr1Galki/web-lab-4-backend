@@ -16,15 +16,24 @@ import java.util.LinkedList;
 @Component
 public class SendDotsDTO implements Serializable {
     private LinkedList<DotEntity> dots;
+    private String receiverName;
 
     public SendDotsDTO (String jsonString) {
         Gson gson = new Gson();
         SendDotsDTO tempDTO = gson.fromJson(jsonString, SendDotsDTO.class);
         this.dots = tempDTO.getDots();
+        this.receiverName = tempDTO.getReceiverName();
+    }
+
+    public SendDotsDTO (DotEntity dot) {
+        LinkedList<DotEntity> dots = new LinkedList<>();
+        dots.add(dot);
+        this.dots = dots;
+        this.receiverName = dot.getOwner();
     }
 
     public String toJsonString() {
         Gson gson = new Gson();
-        return gson.toJson(new SendDotsDTO(dots));
+        return gson.toJson(new SendDotsDTO(dots, receiverName));
     }
 }
