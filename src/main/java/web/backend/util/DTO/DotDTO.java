@@ -1,6 +1,7 @@
-package web.backend.util;
+package web.backend.util.DTO;
 
 import lombok.Data;
+import web.backend.util.DotEntity;
 
 import java.io.Serializable;
 

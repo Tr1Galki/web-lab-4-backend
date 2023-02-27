@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.apache.log4j.Logger;
 
-@EnableRabbit
 @Configuration
+@EnableRabbit
 public class RabbitConfiguration {
     Logger logger = Logger.getLogger(RabbitConfiguration.class);
 

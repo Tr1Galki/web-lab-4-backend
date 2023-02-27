@@ -6,18 +6,15 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import web.backend.repositories.DotsRepository;
-import web.backend.util.DotDTO;
+import web.backend.util.DTO.DotDTO;
 import web.backend.util.DotEntity;
 import web.backend.util.area.AreaChecker;
 
 @Service
 public class AddingService {
-    //TODO: реализовать
-
     private final RabbitTemplate template;
-    private DotsRepository repository;
+    private final DotsRepository repository;
     private final ObjectMapper mapper;
 
     public AddingService(
@@ -38,7 +35,7 @@ public class AddingService {
 //        send(dto);
         System.out.println(mapper.writeValueAsString(dot));
         repository.addDot(dot.getX(), dot.getY(), dot.getR(), dot.getDate(), dot.getTime(), dot.getOwner(), dot.getCreator(), dot.getInArea());
-        System.out.println(repository.getDots());
+        System.out.println(repository.getDotsByOwner("2"));
     }
 
     private Boolean checkArea(DotEntity dot) {
