@@ -43,11 +43,6 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Queue sharingQuery() {
-        return new Queue("sharing-dots-query");
-    }
-
-    @Bean
     public Queue getDotsQuery() {
         return new Queue("getting-dots-query");
     }
