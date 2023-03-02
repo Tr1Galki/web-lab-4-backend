@@ -68,21 +68,6 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Binding errorBinding1() {
-        return BindingBuilder.bind(addingQuery()).to(directExchange()).with("add-with-share");
-    }
-
-    @Bean
-    public Binding errorBinding2() {
-        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("add-with-share");
-    }
-
-    @Bean
-    public Binding shareBinding() {
-        return BindingBuilder.bind(sharingQuery()).to(directExchange()).with("share-dots");
-    }
-
-    @Bean
     public Binding addBinding() {
         return BindingBuilder.bind(addingQuery()).to(directExchange()).with("add-dots");
     }
